@@ -47,6 +47,17 @@ const Auth = () => {
     };
     
     checkSession();
+
+      if (mode === 'update-password') {
+    const exchange = async () => {
+      const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+      if (error) {
+        toast.error("Session exchange failed: " + error.message);
+      }
+    };
+    exchange();
+  }
+
     
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
