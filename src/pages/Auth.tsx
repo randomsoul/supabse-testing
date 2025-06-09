@@ -48,11 +48,15 @@ const Auth = () => {
     
     checkSession();
 
-      if (mode === 'update-password') {
+     // ✅ Fix for update-password recovery hash
+  if (mode === 'update-password') {
     const exchange = async () => {
-      const { error } = await supabase.auth.exchangeCodeForSession(window.location.href);
-      if (error) {
-        toast.error("Session exchange failed: " + error.message);
+      const hash = window.location.hash;
+      if (hash && hash.includes("type=recovery")) {
+        const { error } = await supabase.auth.exchangeCodeForSession(hash);
+        if (error) {
+          toast.error("Session exchange failed: " + error.message);
+        }
       }
     };
     exchange();
